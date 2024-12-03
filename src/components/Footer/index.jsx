@@ -130,6 +130,22 @@ const Footer = ({ id }) => {
           <QRCodeContainer onClick={(e) => e.stopPropagation()}>
             <h3>Contato via QR Code</h3>
             <QRCodeImage src={QRCode} alt="QR Code para redes sociais" />
+
+
+
+            {/* Alteração de Código do Vini aqui */}
+            <div>
+              <button 
+                onClick={() => window.open("https://beacons.ai/marisawebber", "_blank", "noopener,noreferrer")}
+              >
+                Acesse agora
+              </button>
+            </div>
+
+            {/* Alteração de Código do Vini aqui */}
+
+            
+                
             <button onClick={toggleQR}>Fechar</button>
           </QRCodeContainer>
         </QRModal>

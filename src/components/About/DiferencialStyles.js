@@ -23,6 +23,19 @@ export const Container = styled.div`
   background-repeat: no-repeat;
   position: relative;
 
+  @media (max-width: 1024px) {
+    
+  }
+
+  /* Alteração de Código do Vini aqui*/
+  @media (min-width: 1024px) and (max-width: 1280px) {
+    background-size: contain; /* Ajusta o tamanho da imagem sem cortar */
+    background-position: center bottom; /* Alinha a imagem mais para a parte inferior */
+    min-height: 60vh; /* Reduz a altura mínima ainda mais */
+    padding: 20px 40px; /* Espaçamento ajustado */
+  }
+  /* Código do Vini aqui*/
+  
   @media (max-width: 768px) {
     flex-direction: column;
     justify-content: center;
@@ -59,8 +72,9 @@ export const LogoTop = styled.img`
 `;
 
 export const TextContainer = styled.div`
-  width: 40%;
-  padding-left: 250px;
+/*Alteração de Código do Vini aqui ( ALTERAÇÃO NA "%" DO WIDTH.*/
+  width: 55%;
+  padding-left: 150px;
   color: var(--black);
   z-index: 2;
 
