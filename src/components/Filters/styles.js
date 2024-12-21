@@ -11,22 +11,12 @@ export const FiltersContainer = styled.div`
   max-width: 1000px; /* Aumenta a largura máxima */
   width: 100%; /* Garante que o container se expanda horizontalmente */
   min-height: 400px;
-
-  @media (max-width: 768px) {
-    max-width: 100%; /* Responsivo em telas menores */
-    padding: 1.5rem 1rem;
-    gap: 0.8rem;
-  }
 `;
 
 export const FieldContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-
-  @media (max-width: 768px) {
-    gap: 0.3rem;
-  }
 `;
 
 export const Label = styled.label`
@@ -77,4 +67,50 @@ export const SliderWrapper = styled.div`
   padding: 0 10px;
   box-sizing: border-box;
   position: relative;
+`;
+
+export const FilterButton = styled.button`
+  display: block;
+  margin-bottom: 1rem;
+  background-color: var(--red);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+
+  @media (min-width: 769px) {
+    display: none;
+  }
+`;
+
+export const ModalWrapper = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const ModalContent = styled.div`
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+`;
+
+export const CloseButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
 `;

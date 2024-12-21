@@ -8,11 +8,26 @@ import {
   PriceInput,
   StyledSelect,
   SliderWrapper,
+  FilterButton,
+  ModalWrapper,
+  ModalContent,
+  CloseButton,
 } from "./styles";
 
 const Filters = ({ filters, onFilterChange, filterOptions }) => {
   const [priceRange, setPriceRange] = useState([0, 20000000]);
   const [tempPriceRange, setTempPriceRange] = useState([0, 20000000]);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     setPriceRange([0, 20000000]);
@@ -83,9 +98,10 @@ const Filters = ({ filters, onFilterChange, filterOptions }) => {
     });
   };
 
-  return (
+  const toggleModal = () => setModalOpen(!isModalOpen);
+
+  const renderFilters = () => (
     <FiltersContainer>
-      {/* Filtro de Preço */}
       <FieldContainer>
         <Label>Preço (R$)</Label>
         <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
@@ -93,26 +109,22 @@ const Filters = ({ filters, onFilterChange, filterOptions }) => {
             type="text"
             value={formatToReais(tempPriceRange[0])}
             onChange={(e) =>
-              handleTempInputChange(
-                0,
-                e.target.value.replace(/[^\d]/g, "")
-              )
+              setTempPriceRange([
+                e.target.value.replace(/[^\d]/g, ""),
+                tempPriceRange[1],
+              ])
             }
-            onBlur={() => applyInputChange(0)}
-            onKeyDown={(e) => e.key === "Enter" && applyInputChange(0)}
           />
           <span style={{ fontWeight: "bold", color: "#333" }}>até</span>
           <PriceInput
             type="text"
             value={formatToReais(tempPriceRange[1])}
             onChange={(e) =>
-              handleTempInputChange(
-                1,
-                e.target.value.replace(/[^\d]/g, "")
-              )
+              setTempPriceRange([
+                tempPriceRange[0],
+                e.target.value.replace(/[^\d]/g, ""),
+              ])
             }
-            onBlur={() => applyInputChange(1)}
-            onKeyDown={(e) => e.key === "Enter" && applyInputChange(1)}
           />
         </div>
         <SliderWrapper>
@@ -122,70 +134,17 @@ const Filters = ({ filters, onFilterChange, filterOptions }) => {
             max={20000000}
             step={10000}
             value={priceRange}
-            onChange={handleRangeChange}
-            trackStyle={{ backgroundColor: "var(--red)", height: 8 }}
-            handleStyle={{
-              borderColor: "var(--red)",
-              backgroundColor: "#fff",
-              height: 20,
-              width: 20,
-              marginTop: -6,
-              boxShadow: "0 0 5px rgba(0,0,0,0.2)",
-            }}
-            railStyle={{ backgroundColor: "#ddd", height: 8 }}
+            onChange={(range) => setPriceRange(range)}
           />
         </SliderWrapper>
       </FieldContainer>
 
-      {/* Filtro de Ordenação */}
-      <FieldContainer>
-        <Label>Ordenar por Venda</Label>
-        <StyledSelect
-          value={filters.ordenacaoVenda || ""}
-          onChange={(e) => handleSortChange(e, "Venda")}
-        >
-          <option value="">Selecione</option>
-          <option value="asc">Menor para Maior</option>
-          <option value="desc">Maior para Menor</option>
-        </StyledSelect>
-      </FieldContainer>
-
-      {/* Filtro de Ordenação por Locação */}
-      <FieldContainer>
-        <Label>Ordenar por Locação</Label>
-        <StyledSelect
-          value={filters.ordenacaoLocacao || ""}
-          onChange={(e) => handleSortChange(e, "Locacao")}
-        >
-          <option value="">Selecione</option>
-          <option value="asc">Menor para Maior</option>
-          <option value="desc">Maior para Menor</option>
-        </StyledSelect>
-      </FieldContainer>
-
-      {/* Filtro de Ordenação por Condomínio */}
-      <FieldContainer>
-        <Label>Ordenar por Condomínio</Label>
-        <StyledSelect
-          value={filters.ordenacaoOutros || ""}
-          onChange={(e) => handleSortChange(e, "Outros")}
-        >
-          <option value="">Selecione</option>
-          <option value="asc">Menor para Maior</option>
-          <option value="desc">Maior para Menor</option>
-        </StyledSelect>
-      </FieldContainer>
-
-      {/* Outros filtros */}
       {filterOptions.map(({ id, label, key, options }) => (
         <FieldContainer key={id}>
-          <Label htmlFor={id}>{label}</Label>
+          <Label>{label}</Label>
           <StyledSelect
-            id={id}
             value={filters[key] || ""}
-            onChange={(e) =>
-              onFilterChange({ ...filters, [key]: e.target.value })
-            }
+            onChange={(e) => onFilterChange({ ...filters, [key]: e.target.value })}
           >
             {options.map(({ value, label }) => (
               <option key={value} value={value}>
@@ -196,6 +155,26 @@ const Filters = ({ filters, onFilterChange, filterOptions }) => {
         </FieldContainer>
       ))}
     </FiltersContainer>
+  );
+
+  return (
+    <>
+      {isMobile ? (
+        <>
+          <FilterButton onClick={toggleModal}>Filtros</FilterButton>
+          {isModalOpen && (
+            <ModalWrapper>
+              <ModalContent>
+                <CloseButton onClick={toggleModal}>×</CloseButton>
+                {renderFilters()}
+              </ModalContent>
+            </ModalWrapper>
+          )}
+        </>
+      ) : (
+        renderFilters()
+      )}
+    </>
   );
 };
 
