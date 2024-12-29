@@ -8,6 +8,8 @@ const Diferencial = () => {
   const containerRef = useRef(null); // Referência ao container
 
   useEffect(() => {
+    const container = containerRef.current; // Copia o valor da referência para uma variável
+  
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -18,18 +20,18 @@ const Diferencial = () => {
       },
       { threshold: 0.5 } // Define que 50% do elemento deve estar visível
     );
-
-    if (containerRef.current) {
-      observer.observe(containerRef.current); // Observa o container
+  
+    if (container) {
+      observer.observe(container); // Observa o container
     }
-
+  
     return () => {
-      if (containerRef.current) {
-        observer.unobserve(containerRef.current); // Limpa o observador ao desmontar
+      if (container) {
+        observer.unobserve(container); // Limpa o observador ao desmontar
       }
     };
   }, []);
-
+  
   return (
     <Container ref={containerRef} background={imagem}>
       <TextContainer>

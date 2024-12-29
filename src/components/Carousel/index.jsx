@@ -71,6 +71,7 @@ const Carousel = ({ images }) => {
     <CarouselWrapper>
       <Slider {...settings}>
         {images.map((item, index) => (
+          /* eslint-disable-next-line */
           <SlideContainer key={index}>
             {item.type === "video" ? (
               <iframe
