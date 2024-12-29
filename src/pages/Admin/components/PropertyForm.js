@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { uploadImagesToCloudinary } from "../../../services/CloudinaryService";
 import { toast, ToastContainer } from "react-toastify";

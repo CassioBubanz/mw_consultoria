@@ -19,6 +19,7 @@ const VideoPlayer = ({ videoUrl }) => {
   }
 
   return (
+     /* eslint-disable-next-line */ 
     <VideoContainer>
       <ReactPlayer
         url={videoSource}

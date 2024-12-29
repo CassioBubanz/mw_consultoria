@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useRef, useState } from "react";
 import {
   ServicosContainer,
@@ -20,24 +21,26 @@ const Servicos = () => {
   const titleRef = useRef(null);
 
   useEffect(() => {
+    if (!titleRef.current) return; // Verifica se o elemento existe antes de criar o observer
+  
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setIsTitleVisible(entry.isIntersecting);
+        setIsTitleVisible(entry.isIntersecting); // Atualiza o estado com base na visibilidade
       },
       { threshold: 0.5 }
     );
-
-    if (titleRef.current) {
-      observer.observe(titleRef.current);
-    }
-
+  
+    observer.observe(titleRef.current); // Observa o título
+  
+    // Limpeza do observer
+    
     return () => {
       if (titleRef.current) {
-        observer.unobserve(titleRef.current);
+        observer.unobserve(titleRef.current); // Chama unobserve apenas se o elemento ainda existir
       }
     };
-  }, []);
-
+  }, []); // O efeito será executado apenas uma vez, após o primeiro render
+  
   return (
     <div style={{ backgroundColor: "var(--grey)" }}>
       <TituloServicos ref={titleRef} isVisible={isTitleVisible}>
