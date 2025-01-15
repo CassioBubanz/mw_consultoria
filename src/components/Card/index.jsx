@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet"; // Importa o Helmet
 import {
   FaMapMarkerAlt,
   FaBed,
@@ -45,13 +46,29 @@ const Card = ({
 }) => {
   const navigate = useNavigate();
   const cloudinaryBaseUrl = `https://res.cloudinary.com/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}`;
+  
   const media = [
     ...(imagens || []).map((img) => ({ src: img, type: "image" })),
     ...(videos || []).map((vid) => ({ src: vid, type: "video" })),
   ];
 
+  // Open Graph Meta Tags
+  const metaTitle = titulo ? titulo : "Imóvel disponível | MW Consultoria Imobiliária"; 
+  const metaDescription = descricao ? descricao.substring(0, 150) : "Confira este imóvel disponível na MW Consultoria Imobiliária."; 
+  const metaImage = imagens && imagens.length > 0 ? imagens[0] : "https://via.placeholder.com/300x200?text=Sem+Imagem"; 
+  const metaUrl = `https://www.mwconsultoriaimobiliaria.com.br/imoveis/${id}`;
+
   return (
     <CardContainer>
+      <Helmet>
+        <title>{metaTitle}</title>
+        <meta name="description" content={metaDescription} />
+        <meta property="og:title" content={metaTitle} />
+        <meta property="og:description" content={metaDescription} />
+        <meta property="og:image" content={metaImage} />
+        <meta property="og:url" content={metaUrl} />
+        <meta property="og:type" content="website" />
+      </Helmet>
       <div
         style={{
           flex: 1,
@@ -68,14 +85,12 @@ const Card = ({
         />
       </div>
       <InfoContainer>
-        <Title>{titulo || "Sem título"}</Title>
+        <Title>{metaTitle}</Title>
         <Address>
           <FaMapMarkerAlt /> {endereco}
         </Address>
         <Description>
-          {descricao
-            ? `${descricao.substring(0, 100)}...`
-            : "Descrição não disponível."}
+          {descricao ? `${descricao.substring(0, 100)}...` : "Descrição não disponível."}
         </Description>
         <Features>
           <span>
@@ -144,7 +159,10 @@ const Card = ({
         >
           <Button onClick={() => navigate(`/imoveis/${id}`)}>VER MAIS</Button>
           <ShareIcon
-            link={`https://www.mwconsultoriaimobiliaria.com.br/imoveis/${id}`}
+            link={metaUrl}
+            title={metaTitle}
+            image={metaImage}
+            description={metaDescription}
           />
         </div>
       </InfoContainer>

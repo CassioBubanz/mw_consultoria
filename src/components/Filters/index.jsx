@@ -11,16 +11,17 @@ import {
 } from "./styles";
 
 const Filters = ({ filters, onFilterChange, filterOptions }) => {
-  const [priceRange, setPriceRange] = useState([0, 20000000]);
-  const [tempPriceRange, setTempPriceRange] = useState([0, 20000000]);
+  const [priceRange, setPriceRange] = useState([0, Infinity]);
+  const [tempPriceRange, setTempPriceRange] = useState([0, Infinity]);
+  const [isMaxPriceFocused, setIsMaxPriceFocused] = useState(false); // Controle do foco
 
   useEffect(() => {
-    setPriceRange([0, 20000000]);
-    setTempPriceRange([0, 20000000]);
+    setPriceRange([0, Infinity]);
+    setTempPriceRange([0, Infinity]);
     onFilterChange({
       ...filters,
       precoMinimo: 0,
-      precoMaximo: 20000000,
+      precoMaximo: Infinity,
       ordenacaoVenda: "",
       ordenacaoLocacao: "",
       ordenacaoOutros: "",
@@ -28,6 +29,7 @@ const Filters = ({ filters, onFilterChange, filterOptions }) => {
   }, []);
 
   const formatToReais = (value) => {
+    if (value === Infinity) return "R$ ∞"; // Exibe "R$ ∞" quando o valor é infinito
     return value.toLocaleString("pt-BR", {
       style: "currency",
       currency: "BRL",
@@ -41,13 +43,14 @@ const Filters = ({ filters, onFilterChange, filterOptions }) => {
     onFilterChange({
       ...filters,
       precoMinimo: range[0],
-      precoMaximo: range[1],
+      precoMaximo: range[1] === Infinity ? undefined : range[1],
     });
   };
 
   const handleTempInputChange = (index, value) => {
     const updatedTempRange = [...tempPriceRange];
     updatedTempRange[index] = value === "" ? "" : Number(value);
+    if (updatedTempRange[index] === Infinity) updatedTempRange[index] = "";
     setTempPriceRange(updatedTempRange);
   };
 
@@ -58,20 +61,16 @@ const Filters = ({ filters, onFilterChange, filterOptions }) => {
       updatedRange[1] = priceRange[1];
     }
 
-    updatedRange[0] = Math.max(0, Math.min(20000000, updatedRange[0]));
-    updatedRange[1] = Math.max(0, Math.min(20000000, updatedRange[1]));
-
-    if (updatedRange[0] > updatedRange[1]) {
-      if (index === 0) updatedRange[1] = updatedRange[0];
-      if (index === 1) updatedRange[0] = updatedRange[1];
-    }
+    updatedRange[0] = Math.max(0, updatedRange[0]);
+    updatedRange[1] = updatedRange[1] === "" ? Infinity : updatedRange[1];
+    updatedRange[1] = Math.max(updatedRange[0], updatedRange[1]);
 
     setPriceRange(updatedRange);
     setTempPriceRange(updatedRange);
     onFilterChange({
       ...filters,
       precoMinimo: updatedRange[0],
-      precoMaximo: updatedRange[1],
+      precoMaximo: updatedRange[1] === Infinity ? undefined : updatedRange[1],
     });
   };
 
@@ -81,6 +80,21 @@ const Filters = ({ filters, onFilterChange, filterOptions }) => {
       ...filters,
       [key]: e.target.value,
     });
+  };
+
+  const handleMaxPriceFocus = () => {
+    setIsMaxPriceFocused(true);
+    if (tempPriceRange[1] === "") {
+      setTempPriceRange([tempPriceRange[0], 1000000000]); // Preenche com 1 bilhão quando clicar
+    }
+  };
+
+  const handleMaxPriceBlur = () => {
+    if (tempPriceRange[1] === 1000000000) {
+      setTempPriceRange([tempPriceRange[0], ""]); // Deixa vazio se o usuário sair
+    }
+    setIsMaxPriceFocused(false);
+    applyInputChange(1); // Aplica a alteração
   };
 
   return (
@@ -93,10 +107,7 @@ const Filters = ({ filters, onFilterChange, filterOptions }) => {
             type="text"
             value={formatToReais(tempPriceRange[0])}
             onChange={(e) =>
-              handleTempInputChange(
-                0,
-                e.target.value.replace(/[^\d]/g, "")
-              )
+              handleTempInputChange(0, e.target.value.replace(/[^\d]/g, ""))
             }
             onBlur={() => applyInputChange(0)}
             onKeyDown={(e) => e.key === "Enter" && applyInputChange(0)}
@@ -106,12 +117,10 @@ const Filters = ({ filters, onFilterChange, filterOptions }) => {
             type="text"
             value={formatToReais(tempPriceRange[1])}
             onChange={(e) =>
-              handleTempInputChange(
-                1,
-                e.target.value.replace(/[^\d]/g, "")
-              )
+              handleTempInputChange(1, e.target.value.replace(/[^\d]/g, ""))
             }
-            onBlur={() => applyInputChange(1)}
+            onFocus={handleMaxPriceFocus} // Quando clicar, mostra 1 bilhão
+            onBlur={handleMaxPriceBlur}  // Deixa vazio se sair sem alterar
             onKeyDown={(e) => e.key === "Enter" && applyInputChange(1)}
           />
         </div>
@@ -119,7 +128,7 @@ const Filters = ({ filters, onFilterChange, filterOptions }) => {
           <Slider
             range
             min={0}
-            max={20000000}
+            max={1000000000} // Ajuste para 1 bilhão
             step={10000}
             value={priceRange}
             onChange={handleRangeChange}

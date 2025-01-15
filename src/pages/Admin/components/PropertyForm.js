@@ -489,7 +489,7 @@ const PropertyForm = ({ existingProperty, onSave }) => {
     customInput={Input}
   />
   <p style={{ fontSize: "12px", color: "#888", marginTop: "5px" }}>
-    Digite apenas números. O campo será formatado automaticamente.
+Digite números com vírgula para decimais. O campo será formatado automaticamente.
   </p>
 </InputGroup>
 
@@ -507,7 +507,7 @@ const PropertyForm = ({ existingProperty, onSave }) => {
     customInput={Input}
   />
   <p style={{ fontSize: "12px", color: "#888", marginTop: "5px" }}>
-    Digite apenas números. O campo será formatado automaticamente.
+Digite números com vírgula para decimais. O campo será formatado automaticamente.
   </p>
 </InputGroup>
 
@@ -525,7 +525,7 @@ const PropertyForm = ({ existingProperty, onSave }) => {
     customInput={Input}
   />
   <p style={{ fontSize: "12px", color: "#888", marginTop: "5px" }}>
-    Digite apenas números. O campo será formatado automaticamente.
+Digite números com vírgula para decimais. O campo será formatado automaticamente.
   </p>
 </InputGroup>
 
@@ -543,7 +543,7 @@ const PropertyForm = ({ existingProperty, onSave }) => {
     customInput={Input}
   />
   <p style={{ fontSize: "12px", color: "#888", marginTop: "5px" }}>
-    Digite apenas números. O campo será formatado automaticamente.
+Digite números com vírgula para decimais. O campo será formatado automaticamente.
   </p>
 </InputGroup>
 
