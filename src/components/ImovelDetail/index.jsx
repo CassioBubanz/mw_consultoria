@@ -125,7 +125,9 @@ const ImobiDetails = () => {
     property.descricao?.substring(0, 150) ||
     "Confira este imóvel disponível na MW Consultoria Imobiliária.";
   const metaImage =
-    images[1]?.src || "https://via.placeholder.com/300x200?text=Sem+Imagem";
+    property.imagens && property.imagens.length > 0
+      ? `https://res.cloudinary.com/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/image/upload/${property.imagens[0]}`
+      : "https://via.placeholder.com/300x200?text=Sem+Imagem";
 
   const metaUrl = `https://www.mwconsultoriaimobiliaria.com.br/imoveis/${id}`;
 
