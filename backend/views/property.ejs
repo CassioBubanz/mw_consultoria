@@ -1,33 +1,30 @@
-<!-- views/property.ejs -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= title %> - Detalhes</title>
+  <title><%= title %></title>
 
-  <!-- Metatags Open Graph -->
+  <!-- Open Graph meta tags para redes sociais -->
   <meta property="og:title" content="<%= title %>">
   <meta property="og:description" content="<%= description %>">
-  <meta property="og:image" content="<%= image %>">
+  <meta property="og:image" content="<%= images.length > 0 ? images[0] : 'default-image-url.jpg' %>">
   <meta property="og:url" content="<%= url %>">
   <meta property="og:type" content="website">
-
-  <!-- Metatags Twitter Cards -->
-  <meta name="twitter:title" content="<%= title %>">
-  <meta name="twitter:description" content="<%= description %>">
-  <meta name="twitter:image" content="<%= image %>">
-  <meta name="twitter:card" content="summary_large_image">
-
-  <!-- Outras metatags para SEO -->
-  <meta name="description" content="<%= description %>">
-  <meta name="keywords" content="imóveis, vendas, consultoria, apartamento, casa">
-
 </head>
 <body>
   <h1><%= title %></h1>
   <p><%= description %></p>
-  <img src="<%= image %>" alt="Imagem do imóvel">
+  
+  <h2>Imagem principal do imóvel:</h2>
+  <div>
+    <% if (images.length > 0) { %>
+      <img src="<%= images[0] %>" alt="Imagem do imóvel" style="max-width: 100%; height: auto;">
+    <% } else { %>
+      <p>Não há imagens disponíveis para este imóvel.</p>
+    <% } %>
+  </div>
+
   <p><a href="<%= url %>">Ver mais detalhes</a></p>
 </body>
 </html>

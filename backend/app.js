@@ -11,7 +11,7 @@ const serviceAccount = require('./mwconsultoria-e14e4-firebase-adminsdk-mjjla-9b
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: `https://${process.env.REACT_APP_FIREBASE_PROJECT_ID}.firebaseio.com`, // Substituímos com o projeto do Firebase
+  databaseURL: `https://${process.env.FIREBASE_PROJECT_ID}.firebaseio.com`, // Verifique se a variável de ambiente está correta
 });
 
 const db = admin.firestore();
@@ -31,18 +31,21 @@ app.get('/properties/:id', async (req, res) => {
 
   try {
     // Buscando o imóvel na coleção 'properties' do Firestore
-    const docRef = db.collection('properties').doc(id);  // Alterado para 'properties'
+    const docRef = db.collection('properties').doc(id);
     const docSnap = await docRef.get();
 
     if (docSnap.exists) {
       const property = docSnap.data();
+
+      // Verifique se 'imagens' está presente nos dados e se é um array
+      const images = property.imagens || [];
       
       // Renderizando a página com EJS
       res.render('property', {
-        title: property.title,
-        description: property.description,
-        image: property.imageUrl,  // A URL da imagem armazenada no Cloudinary
-        url: `https://mwconsultoriaimobiliaria.com.br/properties/${id}`  // Alterado para 'properties'
+        title: property.nm_titulo,          // Certifique-se que o nome do campo é correto
+        description: property.ds_descricao, // Certifique-se que o nome do campo é correto
+        images: images,                     // Imagens armazenadas no Firestore
+        url: `https://mwconsultoriaimobiliaria.com.br/properties/${id}`  // URL personalizada para o imóvel
       });
     } else {
       res.status(404).send('Imóvel não encontrado!');
