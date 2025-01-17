@@ -245,7 +245,10 @@ const ImobiDetails = () => {
             <FaWhatsapp />
           </WhatsAppButton>
 
-          <ShareIcon link={metaUrl} />
+          <ShareIcon link={metaUrl}
+            title={metaTitle}
+            description={metaDescription}
+            image={images[0].src}  />
         </div>
       </ContentContainer>
     </Wrapper>

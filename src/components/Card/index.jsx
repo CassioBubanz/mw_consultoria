@@ -145,6 +145,9 @@ const Card = ({
           <Button onClick={() => navigate(`/imoveis/${id}`)}>VER MAIS</Button>
           <ShareIcon
             link={`https://www.mwconsultoriaimobiliaria.com.br/imoveis/${id}`}
+            image={imagens && imagens[0]}
+            title={titulo}
+            description={descricao}
           />
         </div>
       </InfoContainer>
