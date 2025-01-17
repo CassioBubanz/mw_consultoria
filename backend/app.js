@@ -3,15 +3,19 @@ const path = require('path');
 const admin = require('firebase-admin');
 const dotenv = require('dotenv');
 
-// Configuração do Firebase (do arquivo .env)
+// Carregando variáveis de ambiente do arquivo .env
 dotenv.config();
 
-// Inicializando o Firebase Admin SDK com a chave de serviço (que você encontra no console do Firebase)
-const serviceAccount = require('./mwconsultoria-e14e4-firebase-adminsdk-mjjla-9b56ceff64.json');  // Caminho para o arquivo JSON da chave de serviço
+// Inicializando o Firebase Admin SDK com variáveis de ambiente
+const serviceAccount = {
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'), // Corrige o formato da chave
+  clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+};
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: `https://${process.env.FIREBASE_PROJECT_ID}.firebaseio.com`, // Verifique se a variável de ambiente está correta
+  databaseURL: `https://${process.env.FIREBASE_PROJECT_ID}.firebaseio.com`, // Usando a variável para o URL
 });
 
 const db = admin.firestore();
